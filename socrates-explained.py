@@ -22,7 +22,7 @@ scheme_eval(atomspace, ('(load-from-path "/home/noskill/projects/opencog/opencog
 var_a = VariableNode("$A")
 var_b = VariableNode("$B")
 var_c = VariableNode("$C")
-var_list = VariableList(VariableNode("$A"), VariableNode("$B"), VariableNode("$C"))
+var_list = VariableList(var_a, var_b, var_c)
 BA = InheritanceLink(var_b, var_a)
 CB = InheritanceLink(var_c, var_b)
 CA = InheritanceLink(var_c, var_a)
