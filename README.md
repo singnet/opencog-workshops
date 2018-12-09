@@ -1,6 +1,8 @@
 # opencog-intro
 simple examples for opencog
 
+The demo requires docker and 64-bit OS 
+
 fetch data for vqa demo
 
 ```
