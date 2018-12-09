@@ -3,7 +3,14 @@ simple examples for opencog
 
 fetch data for vqa demo
 
+```
 wget https://s3-us-west-2.amazonaws.com/abelikov/data-small.tar.gz
+```
+
+unpack
+```
+tar -xvf data-small.tar.gz
+```
 
 to build docker image run
 
@@ -14,7 +21,12 @@ docker build docker
 To start docker with simple examples notebook:  
 
 ```
-docker run -p8888:8888 -it <image id> /home/relex/opencog-intro-master/notebook.sh 
+docker run -p8888:8888 -v ~/projects/data:/home/relex/projects/data -it <image id> /home/relex/opencog-intro-master/notebook.sh 
 ```
 
-# todo: mount data
+
+To start vqa demo:
+
+```
+docker run -p8888:8888 -v ~/projects/data:/home/relex/projects/data -it <image id> /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
+```
