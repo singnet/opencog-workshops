@@ -21,9 +21,10 @@ docker run -p8888:8888  -it demo-opencog /home/relex/opencog-intro-master/notebo
 
 If notebook successully started you should  
 be able to open it at localhost:8888
+password for notebook is **password**
 
 ## running vqa demo
-fetch data for vqa demo
+fetch data for vqa demo(on host, not inside a container)
 
 ```
 wget https://s3-us-west-2.amazonaws.com/abelikov/data-small.tar.gz
