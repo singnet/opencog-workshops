@@ -38,5 +38,9 @@ tar -xvf data-small.tar.gz
 To start vqa demo:
 
 ```
-docker run -p8888:8888 -v `pwd`/data:/home/relex/projects/data -it demo-opencog /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
+docker run -p8889:8889 -v `pwd`/data:/home/relex/projects/data -it demo-opencog /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
 ```
+
+If notebook successully started you should  
+be able to open it at localhost:8889 
+password for notebook is **password**
