@@ -37,5 +37,5 @@ tar -xvf data-small.tar.gz
 To start vqa demo:
 
 ```
-docker run -p8888:8888 -v ~/projects/data:/home/relex/projects/data -it demo-opencog /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
+docker run -p8888:8888 -v `pwd`/data:/home/relex/projects/data -it demo-opencog /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
 ```
