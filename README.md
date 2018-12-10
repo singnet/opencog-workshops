@@ -1,8 +1,10 @@
 # opencog-intro
 simple examples for opencog
 
-The demo requires docker and 64-bit OS 
+The demo requires docker and 64-bit OS and about 6GB  
+of storage for docker image and data.
 
+To run the demo clone this repository and use following instructions.
 
 ## running opencog introduction  
 to build docker image run
