@@ -7,7 +7,13 @@ of storage for docker image and data.
 To run the demo clone this repository and use following instructions.
 
 ## running opencog introduction  
-to build docker image run
+to load tar image
+
+```
+docker load -i demo-opencog.tar
+```
+
+to build docker image instead run
 
 ```
 docker build docker -t demo-opencog
