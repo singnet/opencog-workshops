@@ -44,7 +44,8 @@ RUN mkdir /usr/local/share/java
 
 WORKDIR /home/Downloads/
 
-
+# guile
+RUN apt install -y guile-2.2
 # build tools
 RUN apt install -y libboost-python-dev libblas-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
 RUN apt install -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
@@ -194,7 +195,6 @@ RUN echo "c.NotebookApp.password_required = False" >> /home/relex/.jupyter/jupyt
 RUN echo "c.NotebookApp.port = 8888" >> /home/relex/.jupyter/jupyter_notebook_config.py
 
 #RUN chmod +x /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
-
 RUN wget https://github.com/noskill/opencog-intro/archive/master.zip && unzip master.zip && rm master.zip
 RUN chmod +x /home/relex/opencog-intro-master/notebook.sh
 user root
@@ -204,11 +204,12 @@ RUN apt-get remove -y postgresql-server-dev-10
 RUN apt-get -y autoclean
 RUN rm -r /home/relex/miniconda3/pkgs/*
 # build tools
+RUN apt autoremove -y
 RUN apt remove -y libboost-python-dev libblas-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
 RUN apt remove -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
-RUN apt autoremove -y
 
 RUN rm /home/relex/miniconda3/envs/demo/lib/libQt5*
 
 user relex
+
 CMD /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
