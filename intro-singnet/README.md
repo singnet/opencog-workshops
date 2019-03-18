@@ -20,20 +20,4 @@ docker run -p8888:8888  -it singnet-demo /home/relex/opencog-intro-master/notebo
 If notebook successully started you should  
 be able to open it at localhost:8888
 
-## running vqa demo
-fetch data for vqa demo
-
-```
-wget https://s3-us-west-2.amazonaws.com/abelikov/data-small.tar.gz
-```
-
-unpack
-```
-tar -xvf data-small.tar.gz
-```
-
-To start vqa demo:
-
-```
-docker run -p8888:8888 -v ~/projects/data:/home/relex/projects/data -it singnet-demo /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
-```
+Use password as password
