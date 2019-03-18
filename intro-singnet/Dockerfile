@@ -19,6 +19,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
 
+
 RUN apt-get update ; apt-get -y upgrade ; apt-get -y autoclean
 
 # Java
@@ -47,6 +48,7 @@ WORKDIR /home/Downloads/
 # guile
 RUN apt install -y guile-2.2
 # build tools
+RUN apt-get update
 RUN apt install -y libboost-python-dev libblas-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
 RUN apt install -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
 
@@ -74,6 +76,21 @@ EXPOSE 4444
 EXPOSE 9000
 
 WORKDIR /home/relex
+
+# conda
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV PATH /opt/conda/bin:$PATH
+RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b && \
+    rm ~/anaconda.sh
+
+RUN /home/relex/miniconda3/bin/conda create -y --name demo python=3.5 && \
+source /home/relex/miniconda3/bin/activate demo && \
+    conda install -y cython cytoolz pip jupyter && \
+    conda install -c pytorch pytorch && \
+    conda install -c pytorch torchvision && \
+    conda install -y -c conda-forge jpype1 && pip install easydict ipywebrtc
+
 
 # Link Parser -- changes often
 # Download the current released version of link-grammar.
@@ -103,6 +120,8 @@ RUN rm -rf /home/relex/current
 
 USER relex
 
+RUN mkdir ~/projects
+
 # Relex -- changes often
 RUN wget https://github.com/opencog/relex/archive/master.tar.gz -O master.tar.gz
 RUN tar -xvf master.tar.gz; cd relex-master; mvn install
@@ -111,44 +130,16 @@ RUN tar -xvf master.tar.gz; cd relex-master; mvn install
 
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib/" >> /home/relex/.profile
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/relex/miniconda3/envs/demo/lib/" >> /home/relex/.profile
-
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
-ENV PATH /opt/conda/bin:$PATH
-RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/anaconda.sh && \
-    /bin/bash ~/anaconda.sh -b && \
-    rm ~/anaconda.sh
-
-RUN /home/relex/miniconda3/bin/conda create -y --name demo python=3.5 && \
-source /home/relex/miniconda3/bin/activate demo && \
-    conda install -y cython cytoolz pip jupyter && \
-    conda install -c pytorch pytorch && \
-    conda install -y -c conda-forge jpype1 && pip install easydict ipywebrtc
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64" >> /home/relex/.profile
 
 user root
 RUN apt install -y postgresql-server-dev-10 cython
-user relex 
-
-# vqa piplie(java)
-RUN wget https://github.com/singnet/semantic-vision/archive/master.zip
-
-RUN unzip master.zip
-
-RUN rm master.zip
-
-RUN mkdir ~/projects
-
-RUN mv semantic-vision-master/ ~/projects/semantic-vision-1
-
-ENV JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
-
-RUN echo "export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64" >> /home/relex/.profile
-
 USER relex 
 
 # cogutil
 RUN wget https://github.com/singnet/cogutil/archive/master.zip
 RUN unzip master.zip && cd cogutil-master/ && mkdir build &&  cd build && cmake ..
-RUN cd cogutil-master/build && sudo make install
+RUN cd cogutil-master/build && sudo make -j5 install
 RUN sudo rm -rf cogutil-master master.zip
 
 # atomspace
@@ -156,7 +147,7 @@ RUN sudo rm -rf cogutil-master master.zip
 
 RUN wget https://github.com/singnet/atomspace/archive/master.zip
 RUN unzip master.zip 
-RUN source /home/relex/miniconda3/bin/activate demo && cd atomspace-master && mkdir build && cd build/ && cmake .. && make
+RUN source /home/relex/miniconda3/bin/activate demo && cd atomspace-master && mkdir build && cd build/ && cmake .. && make -j5
 run cd atomspace-master/build && sudo make install
 RUN sudo rm -rf atomspace-master/build master.zip
 RUN mv atomspace-master /home/relex/projects/atomspace
@@ -166,10 +157,22 @@ RUN mv atomspace-master /home/relex/projects/atomspace
 
 RUN wget https://github.com/singnet/opencog/archive/master.zip
 RUN unzip master.zip
-RUN source /home/relex/miniconda3/bin/activate demo && cd opencog-master && mkdir build && cd build/ && cmake .. && make
+RUN source /home/relex/miniconda3/bin/activate demo && cd opencog-master && mkdir build && cd build/ && cmake .. && make -j5
 RUN cd opencog-master/build && sudo make install
 RUN sudo rm -rf opencog-master/build master.zip
 RUN mv opencog-master /home/relex/projects/opencog
+
+# Semantic vision 
+user relex 
+RUN wget https://github.com/singnet/semantic-vision/archive/master.zip
+
+RUN unzip master.zip
+
+RUN rm master.zip
+
+
+RUN mv semantic-vision-master/ ~/projects/semantic-vision-1
+
 
 RUN echo "export GUILE_AUTO_COMPILE=0" >> /home/relex/.profile
 
@@ -194,9 +197,11 @@ RUN echo "c.NotebookApp.password_required = False" >> /home/relex/.jupyter/jupyt
 
 RUN echo "c.NotebookApp.port = 8888" >> /home/relex/.jupyter/jupyter_notebook_config.py
 
-#RUN chmod +x /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
 RUN wget https://github.com/noskill/opencog-intro/archive/master.zip && unzip master.zip && rm master.zip
 RUN chmod +x /home/relex/opencog-intro-master/notebook.sh
+
+RUN ln -s /home/relex/projects/semantic-vision-1/experiments/opencog/cog_module/ /home/relex/opencog-intro-master/
+
 user root
 # cleanup
 RUN apt-get -y remove gcc g++ make swig ant
@@ -212,4 +217,4 @@ RUN rm /home/relex/miniconda3/envs/demo/lib/libQt5*
 
 user relex
 
-CMD /home/relex/projects/semantic-vision-1/experiments/opencog/pattern_matcher_vqa/vqa
+CMD /home/relex/opencog-intro-master/notebook.sh
