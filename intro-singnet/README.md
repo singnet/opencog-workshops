@@ -10,6 +10,13 @@ to build docker image run
 ```
 docker build . -t singnet-demo
 ```
+Or, alternatively pull it from docker hub:
+
+```
+docker pull abelikov/opencog
+
+docker tag abelikov/opencog singnet-demo
+```
 
 To start docker with simple examples notebook:  
 
