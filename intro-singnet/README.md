@@ -21,7 +21,7 @@ docker tag abelikov/opencog singnet-demo
 To start docker with simple examples notebook:  
 
 ```
-docker run -p8888:8888  -it singnet-demo /home/relex/opencog-intro-master/notebook.sh 
+docker run -p8888:8888  -it singnet-demo
 ```
 
 If notebook successully started you should  
