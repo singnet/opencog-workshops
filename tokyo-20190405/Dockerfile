@@ -1,9 +1,10 @@
 # Dockerfile that builds OpenCog and everything we need for the visual question answering pipeline.
 #
 # To build:
+#  docker build . -t snet-opencog-workshop
 #
 # To start:
-#    docker run -it -p 8888:8888 8081:8081 snet-opencog-demo
+#  docker run -it -p 8888:8888 8081:8081 snet-opencog-workshop
 #
 # To demo:
 
@@ -49,11 +50,7 @@ RUN apt-get update
 RUN apt install -y libboost-python-dev libblas-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
 RUN apt install -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
 
-# Conda
-# install conda
-
-RUN apt-get install -y wget bzip2 ca-certificates \
-    libglib2.0-0 libxext6 libsm6 libxrender1
+RUN apt-get install -y wget bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1
 
 # Create and switch user. The user is privileged, with no password
 # required.  That is, you can use sudo.
@@ -75,7 +72,7 @@ EXPOSE 9000
 
 WORKDIR /home/relex
 
-# conda
+# Conda
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
 RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/anaconda.sh && \
@@ -87,9 +84,11 @@ source /home/relex/miniconda3/bin/activate demo && \
     conda install -y cython cytoolz pip jupyter && \
     conda install -c pytorch pytorch && \
     conda install -c pytorch torchvision && \
-    conda install -y -c conda-forge jpype1 && pip install easydict ipywebrtc && \
-    conda install jupyterhub notebook && \
-    pip install sudospawner
+    conda install -y -c conda-forge jpype1 && pip install easydict ipywebrtc
+
+# JupyterHub
+RUN /home/relex/miniconda3/bin/conda install jupyterhub notebook
+RUN source /home/relex/miniconda3/bin/activate demo && pip install sudospawner
 
 # Link Parser -- changes often
 # Download the current released version of link-grammar.
@@ -129,7 +128,7 @@ RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib/" >> /home/rel
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/relex/miniconda3/envs/demo/lib/" >> /home/relex/.profile
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64" >> /home/relex/.profile
 
-user root
+USER root
 RUN apt install -y postgresql-server-dev-10 cython
 USER relex
 
@@ -156,7 +155,7 @@ RUN sudo rm -rf opencog-master/build master.zip
 RUN mv opencog-master /home/relex/projects/opencog
 
 # Semantic vision
-user relex
+USER relex
 RUN wget https://github.com/singnet/semantic-vision/archive/master.zip
 RUN unzip master.zip
 RUN rm master.zip
@@ -187,7 +186,7 @@ RUN wget https://github.com/singnet/opencog-workshops/archive/master.zip && unzi
 RUN chmod +x /home/relex/opencog-workshops-master/notebook.sh
 RUN ln -s /home/relex/projects/semantic-vision-1/experiments/opencog/cog_module/ /home/relex/opencog-workshops-master/
 
-user root
+USER root
 
 # cleanup
 RUN apt-get -y remove gcc g++ make swig ant
@@ -199,6 +198,6 @@ RUN apt remove -y libboost-python-dev libblas-dev libboost-thread-dev libboost-f
 RUN apt remove -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
 RUN rm /home/relex/miniconda3/envs/demo/lib/libQt5*
 
-user relex
+USER relex
 
 CMD /home/relex/opencog-workshops-master/notebook.sh
