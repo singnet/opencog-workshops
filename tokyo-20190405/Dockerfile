@@ -1,12 +1,14 @@
 # Dockerfile that builds OpenCog and everything we need for the visual question answering pipeline.
 #
 # To build:
-#  docker build . -t snet-opencog-workshop
+#   docker build . -t snet-opencog-workshop
 #
 # To start:
-#  docker run -it -p 8888:8888 8081:8081 snet-opencog-workshop
+#   docker run -it -p 8888:8888 snet-opencog-workshop
 #
 # To demo:
+#   localhost:8888
+#   password = password
 
 FROM ubuntu:18.04
 
@@ -81,19 +83,11 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86
 
 RUN /home/relex/miniconda3/bin/conda create -y --name demo python=3.5 && \
 source /home/relex/miniconda3/bin/activate demo && \
-    conda install -y cython cytoolz pip jupyter && \
-    conda install -c pytorch pytorch && \
-    conda install -c pytorch torchvision && \
-    conda install -y -c conda-forge jpype1 && pip install easydict ipywebrtc
-
-# JupyterHub
-RUN /home/relex/miniconda3/bin/conda install jupyterhub notebook
-RUN source /home/relex/miniconda3/bin/activate demo && pip install sudospawner
+    conda install -y cython cytoolz pip jupyter
 
 # Link Parser -- changes often
 # Download the current released version of link-grammar.
 # The wget gets the latest version w/ wildcard
-
 RUN wget -r --no-parent -nH --cut-dirs=2 https://www.abisource.com/downloads/link-grammar/current/
 RUN tar -zxf current/link-grammar-5*.tar.gz
 # get linkgrammar version
@@ -154,13 +148,6 @@ RUN cd opencog-master/build && sudo make install
 RUN sudo rm -rf opencog-master/build master.zip
 RUN mv opencog-master /home/relex/projects/opencog
 
-# Semantic vision
-USER relex
-RUN wget https://github.com/singnet/semantic-vision/archive/master.zip
-RUN unzip master.zip
-RUN rm master.zip
-RUN mv semantic-vision-master/ ~/projects/semantic-vision-1
-
 RUN echo "export GUILE_AUTO_COMPILE=0" >> /home/relex/.profile
 
 RUN echo "(use-modules (ice-9 readline)) (activate-readline)\
@@ -184,7 +171,6 @@ RUN echo "c.NotebookApp.port = 8888" >> /home/relex/.jupyter/jupyter_notebook_co
 
 RUN wget https://github.com/singnet/opencog-workshops/archive/master.zip && unzip master.zip && rm master.zip
 RUN chmod +x /home/relex/opencog-workshops-master/notebook.sh
-RUN ln -s /home/relex/projects/semantic-vision-1/experiments/opencog/cog_module/ /home/relex/opencog-workshops-master/
 
 USER root
 
