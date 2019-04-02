@@ -109,6 +109,7 @@ RUN cd link-grammar-5.*/; mvn install:install-file \
 USER root
 RUN rm -rf /home/relex/link-grammar*
 RUN rm -rf /home/relex/current
+RUN rm LINKGRAMMAR_VERSION
 
 USER relex
 
@@ -117,6 +118,7 @@ RUN mkdir ~/projects
 # RelEx -- changes often
 RUN wget https://github.com/opencog/relex/archive/master.tar.gz -O master.tar.gz
 RUN tar -xvf master.tar.gz; cd relex-master; mvn install
+RUN rm master.tar.gz
 
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib/" >> /home/relex/.profile
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/relex/miniconda3/envs/demo/lib/" >> /home/relex/.profile
@@ -172,9 +174,30 @@ RUN echo "c.NotebookApp.port = 8888" >> /home/relex/.jupyter/jupyter_notebook_co
 RUN wget https://github.com/singnet/opencog-workshops/archive/master.zip && unzip master.zip && rm master.zip
 RUN chmod +x /home/relex/opencog-workshops-master/notebook.sh
 
+# Jupyter Guile Kernel
+## ZeroMQ
+RUN wget https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
+RUN tar xvf zeromq-4.3.1.tar.gz && cd zeromq-4.3.1 && ./configure && make -j4 && sudo make install
+RUN rm -rf zeromq-4.3.1.tar.gz zeromq-4.3.1
+
+## guile-json
+RUN wget http://download.savannah.gnu.org/releases/guile-json/guile-json-0.6.0.tar.gz
+RUN tar xvf guile-json-0.6.0.tar.gz && cd guile-json-0.6.0 && ./configure --prefix=/usr && make -j4 && sudo make install
+RUN rm -rf guile-json-0.6.0.tar.gz guile-json-0.6.0
+
+## guile-kernel
+RUN mkdir -p ~/.local/share/jupyter/kernels/guile
+RUN wget https://github.com/leungmanhin/guile-kernel/archive/master.zip
+RUN unzip master.zip && cp guile-kernel-master/src/* ~/.local/share/jupyter/kernels/guile
+RUN sed -i 's/###/\/home\/relex\/.local\/share\/jupyter\/kernels/' ~/.local/share/jupyter/kernels/guile/kernel.json
+RUN rm -rf master.zip guile-kernel-master
+
 USER root
 
-# cleanup
+## guile-simple-zmq -- to get ZeroMQ messages
+RUN cd /usr/share/guile/site/2.2 && wget https://raw.githubusercontent.com/leungmanhin/guile-simple-zmq/master/src/simple-zmq.scm
+
+# Cleanup
 RUN apt-get -y remove gcc g++ make swig ant
 RUN apt-get remove -y postgresql-server-dev-10
 RUN apt-get -y autoclean
