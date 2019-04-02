@@ -1,0 +1,7 @@
+goal: (novelty=0.9)
+
+r: RULE_HI (hi) hello world!
+
+r: RULE_Q (I am _* years old) $age='_0 ohhh thanks for telling me!
+
+r: RULE_A (how old am I) you are $age years old!
