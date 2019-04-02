@@ -123,6 +123,7 @@ RUN rm master.tar.gz
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib/" >> /home/relex/.profile
 RUN echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/relex/miniconda3/envs/demo/lib/" >> /home/relex/.profile
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64" >> /home/relex/.profile
+RUN chmod +x /home/relex/relex-master/target/appassembler/bin/relexd
 
 USER root
 RUN apt install -y postgresql-server-dev-10 cython
@@ -171,6 +172,7 @@ RUN echo "c.NotebookApp.password = 'sha1:b6e570f197d6:b920933b262cf450f5c11dc21d
 RUN echo "c.NotebookApp.password_required = False" >> /home/relex/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.port = 8888" >> /home/relex/.jupyter/jupyter_notebook_config.py
 
+# OpenCog workshops
 RUN wget https://github.com/singnet/opencog-workshops/archive/master.zip && unzip master.zip && rm master.zip
 RUN chmod +x /home/relex/opencog-workshops-master/notebook.sh
 
