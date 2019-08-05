@@ -17,3 +17,4 @@ RUN rm -rf /home/relex/miniconda3/pkgs
 USER root
 RUN apt-get clean
 USER relex
+RUN sed -i s/demo/pmvqa3/ /home/relex/opencog-intro-master/notebook.sh
