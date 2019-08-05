@@ -130,21 +130,37 @@ RUN apt install -y postgresql-server-dev-10 cython
 USER relex
 
 # Cogutil
-RUN wget https://github.com/singnet/cogutil/archive/master.zip
+RUN wget https://github.com/opencog/cogutil/archive/master.zip
 RUN unzip master.zip && cd cogutil-master/ && mkdir build &&  cd build && cmake ..
 RUN cd cogutil-master/build && sudo make -j5 install
 RUN sudo rm -rf cogutil-master master.zip
 
 # AtomSpace
-RUN wget https://github.com/singnet/atomspace/archive/master.zip
+RUN wget https://github.com/opencog/atomspace/archive/master.zip
 RUN unzip master.zip
 RUN source /home/relex/miniconda3/bin/activate demo && cd atomspace-master && mkdir build && cd build/ && cmake .. && make -j5
 run cd atomspace-master/build && sudo make install
 RUN sudo rm -rf atomspace-master/build master.zip
 RUN mv atomspace-master /home/relex/projects/atomspace
 
+# URE
+RUN wget https://github.com/opencog/ure/archive/master.zip
+RUN unzip master.zip
+RUN source /home/relex/miniconda3/bin/activate demo && cd ure-master && mkdir build && cd build/ && cmake .. && make -j5
+run cd ure-master/build && sudo make install
+RUN sudo rm -rf ure-master/build master.zip
+RUN mv ure-master /home/relex/projects/ure
+
+# Miner
+RUN wget https://github.com/opencog/miner/archive/master.zip
+RUN unzip master.zip
+RUN source /home/relex/miniconda3/bin/activate demo && cd miner-master && mkdir build && cd build/ && cmake .. && make -j5
+run cd miner-master/build && sudo make install
+RUN sudo rm -rf miner-master/build master.zip
+RUN mv miner-master /home/relex/projects/miner
+
 # OpenCog
-RUN wget https://github.com/singnet/opencog/archive/master.zip
+RUN wget https://github.com/opencog/opencog/archive/master.zip
 RUN unzip master.zip
 RUN source /home/relex/miniconda3/bin/activate demo && cd opencog-master && mkdir build && cd build/ && cmake .. && make -j5
 RUN cd opencog-master/build && sudo make install
