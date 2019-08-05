@@ -179,7 +179,7 @@ RUN echo "(use-modules (ice-9 readline)) (activate-readline)\
 (use-modules (opencog query))\
 (use-modules (opencog exec))" >> /home/relex/.guile
 
-RUN echo "export PYTHONPATH=\$PYTHONPATH:/usr/local/lib/python3.5/dist-packages/" >> /home/relex/.profile
+RUN echo "export PYTHONPATH=\$PYTHONPATH:/usr/local/lib/python3.6/dist-packages/" >> /home/relex/.profile
 RUN echo "export PYTHONPATH=\$PYTHONPATH:/usr/local/lib/python3/dist-packages/" >> /home/relex/.profile
 
 RUN source /home/relex/miniconda3/bin/activate demo && jupyter notebook --generate-config
@@ -216,14 +216,14 @@ USER root
 RUN cd /usr/share/guile/site/2.2 && wget https://raw.githubusercontent.com/leungmanhin/guile-simple-zmq/master/src/simple-zmq.scm
 
 # Cleanup
-RUN apt-get -y remove gcc g++ make swig ant
-RUN apt-get remove -y postgresql-server-dev-10
-RUN apt-get -y autoclean
-RUN rm -r /home/relex/miniconda3/pkgs/*
-RUN apt autoremove -y
-RUN apt remove -y libboost-python-dev libblas-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
-RUN apt remove -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
-RUN rm /home/relex/miniconda3/envs/demo/lib/libQt5*
+#RUN apt-get -y remove gcc g++ make swig ant
+#RUN apt-get remove -y postgresql-server-dev-10
+#RUN apt-get -y autoclean
+#RUN rm -r /home/relex/miniconda3/pkgs/*
+#RUN apt autoremove -y
+#RUN apt remove -y libboost-python-dev libblas-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
+#RUN apt remove -y cmake libboost-program-options-dev libboost-regex-dev libiberty-dev guile-2.2-dev protobuf-compiler uuid-dev
+#RUN rm /home/relex/miniconda3/envs/demo/lib/libQt5*
 
 USER relex
 
