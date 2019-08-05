@@ -1,10 +1,10 @@
-# Dockerfile that builds OpenCog and everything we need for the visual question answering pipeline.
+# Dockerfile that builds OpenCog
 #
 # To build:
-#   docker build . -t snet-opencog-workshop
+#   docker build . -t opencog/workshop
 #
 # To start:
-#   docker run -it -p 8888:8888 snet-opencog-workshop
+#   docker run -it -p 8888:8888 opencog/workshop
 #
 # To demo:
 #   localhost:8888
