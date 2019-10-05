@@ -28,3 +28,9 @@ If notebook successully started you should
 be able to open it at localhost:8888
 
 Use password as password
+
+## connect to running container
+
+```
+docker exec -it <hash of running container> /bin/bash
+```
