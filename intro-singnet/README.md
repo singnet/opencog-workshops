@@ -17,6 +17,11 @@ docker pull abelikov/opencog
 
 docker tag abelikov/opencog singnet-demo
 ```
+Or, from file:
+
+```
+docker load -i signet-demo.tar.gz
+```
 
 To start docker with simple examples notebook:  
 
