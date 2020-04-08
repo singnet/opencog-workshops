@@ -8,4 +8,6 @@ shortly covers Unified Rule Engine(example of using PLN), basically it is shorte
 This workshop also covers CogNets - project to integrate deeplearning models in opencog. 
 It uses singnet fork of opencog and pytorch.
 
+* [tokyo-20190405](/tokyo-20190405) - also covers basics of atomese language and URE, but also features GHOST - scripting language (DSL) for development of artifical characters, chatbots
+
 
