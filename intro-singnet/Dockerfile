@@ -148,7 +148,7 @@ RUN sudo rm -rf atomspace-master/build master.zip
 RUN mv atomspace-master /home/relex/projects/atomspace
 
 # URE
-RUN wget https://github.com/opencog/ure/archive/master.zip && \
+RUN wget https://github.com/singnet/ure/archive/master.zip && \
 unzip master.zip && \
 source /home/relex/miniconda3/bin/activate demo && cd ure-master && mkdir build && cd build/ && cmake .. && make -j5 && sudo make install && \
 rm -rf /home/relex/ure-master/build /home/relex/master.zip
@@ -159,6 +159,11 @@ unzip master.zip
 RUN source /home/relex/miniconda3/bin/activate demo && cd opencog-master && mkdir build && cd build/ && cmake .. && make -j5 && sudo make install
 RUN sudo rm -rf opencog-master/build master.zip
 RUN mv opencog-master /home/relex/projects/opencog
+
+# PLN
+RUN wget https://github.com/singnet/pln/archive/master.zip && unzip master.zip && \
+mv /home/relex/pln-master/opencog/pln/ /home/relex/projects/opencog/opencog/ && \
+rm -rf /home/relex/pln-master && rm /home/relex/master.zip
 
 # agi-bio
 RUN wget https://github.com/opencog/agi-bio/archive/master.zip && \
