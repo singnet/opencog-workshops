@@ -8,3 +8,5 @@ It uses singnet fork of opencog and pytorch.
 * [tokyo-20190405](/tokyo-20190405) - also covers basics of atomese language and URE, but also features GHOST - scripting language (DSL) for development of artifical characters, chatbots
 
 * [intro-vqa](/intro-vqa/) - covers basics of atomese language, Unified Rule Engine, also shortly covers linkgrammar
+
+For intro-singnet and tokyo-20190405 docker images are available on dockerhub
